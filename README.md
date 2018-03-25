@@ -45,7 +45,7 @@ Example:
 
     //Gets all samples in the database.
     var queryAllSamples = dh.Get<Sample>();
-    //Gets all samples that have Data6 as the value of the SomeData property.
+    //Gets all samples that have Data5 as the value of the SomeData property.
     var querySomeSamples = dh.Get<Sample>("SomeData","Data5");
 
     //Removes some of the items in the database.
