@@ -576,6 +576,17 @@ namespace ReflectXMLDB
         /// <param name="filename"></param>
         public void ExportDatabase(string pathToSave, string filename, string fileExtension = ".db")
         {
+            //Checks if the path to save ends with a slash and if not, adds it.
+            if (!pathToSave.Last().Equals('\\'))
+            {
+                pathToSave += '\\';
+            }
+
+            if(!Directory.Exists(pathToSave))
+            {
+                Directory.CreateDirectory(pathToSave);
+            }
+
             string fullFilePath = Path.Combine(pathToSave, filename + fileExtension);
 
             lock(_object)
