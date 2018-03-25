@@ -306,6 +306,36 @@ namespace ReflectXMLDB
         #region Public methods
 
         /// <summary>
+        /// Clears the current database handler. This causes the all internal properties to be null and the workspace to be deleted.
+        /// </summary>
+        public void ClearHandler()
+        {
+            StopMonitoringDirectory();
+
+            if (Directory.Exists(CurrentWorkspace))
+            {
+                Directory.Delete(CurrentWorkspace, true);
+            }
+
+            CurrentWorkspace = null;
+            CurrentDatabases = null;
+            paths = null;
+            lastFileChanged = null;
+
+            if (!OnDatabaseChanged.IsNull())
+            {
+                OnDatabaseChanged = null;
+            }
+            if (!OnDatabaseExported.IsNull())
+            {
+                OnDatabaseExported = null;
+            }
+            if (!OnDatabaseImported.IsNull())
+            {
+                OnDatabaseImported = null;
+            }
+        }
+        /// <summary>
         /// Creates a database file of a type T that inherits from IDatabase.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -339,7 +369,7 @@ namespace ReflectXMLDB
                     File.Delete(path);
                 }
             }
-        }
+        }       
         /// <summary>
         /// Gets a selection of items that inherit from ICollectable object from their database collection.
         /// Returns all items of the selected type T in the database.
