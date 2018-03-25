@@ -29,7 +29,7 @@ namespace ReflectXMLDB.Model
         /// </summary>
         /// <param name="identifiableObjects"></param>
         /// <returns></returns>
-        public string GetNextGUID<T>(ICollection<T> identifiableObjects = null) where T : IIdentifiableObject
+        protected string GetNextGUID<T>(ICollection<T> identifiableObjects = null) where T : IIdentifiableObject
         {
             string newGUID = Guid.NewGuid().ToString().ToUpper();
 
@@ -54,7 +54,7 @@ namespace ReflectXMLDB.Model
         /// </summary>
         /// <param name="collectableObjects"></param>
         /// <returns></returns>
-        public uint GetNextID<T>(ICollection<T> collectableObjects = null) where T : ICollectableObject
+        protected uint GetNextID<T>(ICollection<T> collectableObjects = null) where T : ICollectableObject
         {
             return GetNextID(collectableObjects, 0);
         }
@@ -63,7 +63,7 @@ namespace ReflectXMLDB.Model
         /// </summary>
         /// <param name="collectableObjects"></param>
         /// <returns></returns>
-        public uint GetNextID<T>(ICollection<T> collectableObjects, int startAt = 0) where T : ICollectableObject
+        protected uint GetNextID<T>(ICollection<T> collectableObjects, int startAt = 0) where T : ICollectableObject
         {
             if (collectableObjects.IsNull() || !collectableObjects.Any())
             {
@@ -75,13 +75,13 @@ namespace ReflectXMLDB.Model
 
                 return (uint)Enumerable.Range(startAt, Int32.MaxValue).Except(idList).First();
             }
-        }      
+        }
         /// <summary>
         /// Returns a properly enumerated collection of ICollectableObjects.
         /// </summary>
         /// <param name="collectableObjects"></param>
         /// <returns></returns>
-        public ICollection<T> EnumerateCollection<T>(ICollection<T> collectableObjects, uint startIndex = 0) where T : ICollectableObject
+        protected ICollection<T> EnumerateCollection<T>(ICollection<T> collectableObjects, uint startIndex = 0) where T : ICollectableObject
         {
             collectableObjects.ForEach(iCollectableObject =>
             {
