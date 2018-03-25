@@ -4,7 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Felipe Bellini</Authors>
     <Company></Company>
-    <Description>Simple database handler based on XML serialization and reflection.</Description>
+    <Description>Simple database handler based on XML serialization and reflection.
+
+This is a simple project that aims for C#/.NET beginners to achieve database functionality in their applications. The project is written for .NET Standard 2.0, which is compatible with .NET Core 2.0+ and .NET Framework 4.6.1+.</Description>
     <Copyright>Copyright© ReflectXMLDB 2018</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>ReflectXMLDB</AssemblyName>
@@ -14,6 +16,7 @@
     <Version>0.0.1</Version>
     <PackageLicenseUrl>https://github.com/Fe-Bell/ReflectXMLDB/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Fe-Bell/ReflectXMLDB</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
