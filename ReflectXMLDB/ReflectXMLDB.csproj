@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Felipe Bellini</Authors>
+    <Company></Company>
+    <Description>Simple database handler based on XML serialization and reflection.</Description>
+    <Copyright>Copyright© ReflectXMLDB 2018</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyName>ReflectXMLDB</AssemblyName>
+    <RootNamespace>ReflectXMLDB</RootNamespace>
+    <Product>ReflectXMLDB</Product>
+    <PackageId>ReflectXMLDB</PackageId>
+    <Version>0.0.1</Version>
+    <PackageLicenseUrl>https://github.com/Fe-Bell/ReflectXMLDB/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Fe-Bell/ReflectXMLDB</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\bin\Debug\netstandard2.0\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bin\Release\netstandard2.0\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Interface\" />
+  </ItemGroup>
+
+</Project>
