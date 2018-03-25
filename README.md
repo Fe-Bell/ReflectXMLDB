@@ -28,7 +28,7 @@ Example:
     //SampleDatabase inherits from IDatabase.
     dh.CreateDatabase<SampleDatabase>();
 
-    //Creates a lsit of objects to be inserted.
+    //Creates a list of objects to be inserted.
     //Sample inherits from ICollectableObject and is in the same namespace of SampleDatabase
     List<Sample> samples = new List<Sample>();
     for (int i = 0; i < 10; i++)
