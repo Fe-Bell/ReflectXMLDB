@@ -18,7 +18,7 @@ namespace ReflectXMLDB
         private FileSystemWatcher fileSystemWatcher = null;
         private IEnumerable<string> paths = null;
         private string lastFileChanged = string.Empty;
-        private static readonly object _object = new object();
+        private static readonly object lockObject = new object();
 
         #endregion
 
@@ -238,7 +238,14 @@ namespace ReflectXMLDB
 
             if (!string.IsNullOrEmpty(path))
             {
-                return path.Deserialize<T>();
+                T database = default(T);
+
+                lock(lockObject)
+                {
+                    database = path.Deserialize<T>();
+                }
+
+                return database;
             }
             else
             {
@@ -276,8 +283,6 @@ namespace ReflectXMLDB
             }
             else
             {
-                //var _items = dbCollection.Where(item => item.GetType().GetProperty(propertyName).GetValue(item).ToString() == propertyValue.ToString());
-
                 List<T> col = new List<T>();
                 foreach (var item in dbCollection)
                 {
@@ -348,7 +353,7 @@ namespace ReflectXMLDB
             ((IDatabase)db).GUID = GetNextGUID<T>();
             var xml = db.Serialize(true);
 
-            lock(_object)
+            lock(lockObject)
             {
                 xml.Save(path);
             }
@@ -364,7 +369,7 @@ namespace ReflectXMLDB
 
             if (File.Exists(path))
             {
-                lock(_object)
+                lock(lockObject)
                 {
                     File.Delete(path);
                 }
@@ -475,7 +480,7 @@ namespace ReflectXMLDB
 
             string path = GetDatabasePath(dbInfo.DatabaseType);
 
-            lock (_object)
+            lock (lockObject)
             {
                 db.Serialize(true).Save(path);
             }
@@ -569,7 +574,7 @@ namespace ReflectXMLDB
             //the path
             string fileUnzipFullName = string.Empty;
 
-            lock(_object)
+            lock(lockObject)
             {
                 //Opens the zip file up to be read
                 using (ZipArchive archive = ZipFile.OpenRead(fileToImport))
@@ -619,7 +624,7 @@ namespace ReflectXMLDB
 
             string fullFilePath = Path.Combine(pathToSave, filename + fileExtension);
 
-            lock(_object)
+            lock(lockObject)
             {
                 ZipFile.CreateFromDirectory(CurrentWorkspace, fullFilePath);
             }
