@@ -1,14 +1,14 @@
 # ReflectXMLDB
 Simple database handler based on XML serialization and reflection.
 
-This is a simple project that aims for C#/.NET beginners to achieve database functionality in their applications. The project is written for [.NET Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) 2.0, which is compatible with .NET Core 2.0+ and .NET Framework 4.6.1+.
+This is a project that allows C#/.NET developers to implement simple XML database functionality in their applications. The project is written for [.NET Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) 2.0, which is compatible with .NET Core 2.0+ and .NET Framework 4.6.1+.
 
 ReflectXMLDB is cross platform and can run in Windows, Linux and MacOS operating systems that support the .Net Core initiative.
 
 # Get started
 Download ReflectXMLDB from our [nuget](https://www.nuget.org/packages/ReflectXMLDB/) links.
 
-ReflectXMLDB offers the traditional Get, Insert and Remove item(s) capabilities commonly present in other database handlers. Also, it provides a more low level interface with the database files generated, such as the ability to Export and Import the database files to .db files, which are compressed versions of the workspace.
+ReflectXMLDB offers the traditional Get, Insert, Remove and Update item(s) capabilities commonly present in other database handlers. Also, it provides a more low level interface with the database files generated, such as the ability to Export and Import the database files to .db files, which are compressed versions of the workspace.
 
 There are a few rules that need to be understood when using ReflectXMLDB.
 1. ReflectXMLDB creates a database XML file for each database initialized and/or instantiated.
