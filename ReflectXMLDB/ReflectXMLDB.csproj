@@ -13,7 +13,7 @@ This is a simple project that aims for C#/.NET beginners to achieve database fun
     <RootNamespace>ReflectXMLDB</RootNamespace>
     <Product>ReflectXMLDB</Product>
     <PackageId>ReflectXMLDB</PackageId>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <PackageLicenseUrl>https://github.com/Fe-Bell/ReflectXMLDB/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Fe-Bell/ReflectXMLDB</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>

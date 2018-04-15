@@ -120,41 +120,37 @@ namespace ReflectXMLDB.Generic
         /// </summary>
         /// <param name="serializableObject"></param>
         /// <returns></returns>
-        public static XDocument Serialize(this object serializableObject, bool useDefaultNamespace = false)
+        public static XDocument Serialize<T>(this T serializableObject, bool useDefaultNamespace = true) where T : new()
         {
+            if (!typeof(T).IsSerializable && !(typeof(System.Runtime.Serialization.ISerializable).IsAssignableFrom(typeof(T))))
+            {
+                throw new InvalidOperationException("A serializable Type is required");
+            }
+
             const string XMLSCHEMAINSTANCE_ATB = "http://www.w3.org/2001/XMLSchema-instance";
             const string XMLSCHEMA_ATB = "http://www.w3.org/2001/XMLSchema";
 
-            XDocument xDocument = null;
+            XDocument xDocument = new XDocument();
 
-            try
+            using (System.Xml.XmlWriter writer = xDocument.CreateWriter())
             {
-                xDocument = new XDocument();
-
-                using (System.Xml.XmlWriter writer = xDocument.CreateWriter())
-                {
-                    XmlSerializer serializer = new XmlSerializer(serializableObject.GetType());
-                    serializer.Serialize(writer, serializableObject);
-                }
-
-                if (!useDefaultNamespace)
-                {
-                    //Removes unwanted namespaces that are added automatically by the serializer
-
-                    if (xDocument.Root.Attributes().Any(attrib => attrib.Value == XMLSCHEMAINSTANCE_ATB))
-                    {
-                        xDocument.Root.Attributes().FirstOrDefault(attrib => attrib.Value == XMLSCHEMAINSTANCE_ATB).Remove();
-                    }
-
-                    if (xDocument.Root.Attributes().Any(attrib => attrib.Value == XMLSCHEMA_ATB))
-                    {
-                        xDocument.Root.Attributes().FirstOrDefault(attrib => attrib.Value == XMLSCHEMA_ATB).Remove();
-                    }
-                }
+                XmlSerializer serializer = new XmlSerializer(serializableObject.GetType());
+                serializer.Serialize(writer, serializableObject);
             }
-            catch (Exception)
+
+            if (!useDefaultNamespace)
             {
-                throw;
+                //Removes unwanted namespaces that are added automatically by the serializer
+
+                if (xDocument.Root.Attributes().Any(attrib => attrib.Value == XMLSCHEMAINSTANCE_ATB))
+                {
+                    xDocument.Root.Attributes().FirstOrDefault(attrib => attrib.Value == XMLSCHEMAINSTANCE_ATB).Remove();
+                }
+
+                if (xDocument.Root.Attributes().Any(attrib => attrib.Value == XMLSCHEMA_ATB))
+                {
+                    xDocument.Root.Attributes().FirstOrDefault(attrib => attrib.Value == XMLSCHEMA_ATB).Remove();
+                }
             }
 
             return xDocument;
@@ -167,9 +163,22 @@ namespace ReflectXMLDB.Generic
         /// <param name="xDocument"></param>
         /// <returns></returns>
         public static T Deserialize<T>(this XDocument xDocument)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            return (T)serializer.Deserialize(xDocument.CreateReader());
+        {    
+            //Checks if the XDocument is null and throws exception if yes.
+            if(xDocument.IsNull())
+            {
+                throw new NullReferenceException("The XDocument cannot be null.");
+            }
+
+            T newObj = default(T);
+
+            using (var reader = xDocument.CreateReader())
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                newObj = (T)serializer.Deserialize(xDocument.CreateReader());
+            }
+
+            return newObj;
         }
         /// <summary>
         /// Deserializes a XML from a path to its corresponding object.
@@ -179,26 +188,30 @@ namespace ReflectXMLDB.Generic
         /// <returns></returns>
         public static T Deserialize<T>(this string xmlPath)
         {
-            if (File.Exists(xmlPath))
+            //Checks if the file is a xml file
+            if(Path.GetExtension(xmlPath) == "xml")
             {
-                XDocument xDocument = null;
-
-                try
-                {
-                    xDocument = XDocument.Load(xmlPath);
-
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-                    return (T)serializer.Deserialize(xDocument.CreateReader());
-                }
-                catch (Exception)
-                {
-                    throw new Exception(string.Format("The file at {0} is not a valid xml file.", xmlPath));
-                }
+                throw new Exception(string.Format("The file at {0} is not a xml file.", xmlPath));
             }
-            else
-            {
+
+            //Checks if the file exists in the path selected
+            if (!File.Exists(xmlPath))
+            {            
                 throw new FileNotFoundException();
             }
+
+            //Loads the XML and serializes it back to the caller.
+            XDocument xDocument = XDocument.Load(xmlPath);
+
+            T newObj = default(T);
+
+            using (var reader = xDocument.CreateReader())
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                newObj = (T)serializer.Deserialize(xDocument.CreateReader());
+            }
+
+            return newObj;
         }
      
         /// <summary>

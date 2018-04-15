@@ -307,7 +307,7 @@ namespace ReflectXMLDB
                         var propValue = prop.GetValue(item);
                         if (!propValue.IsNull())
                         {
-                            if (prop.GetValue(item).ToString() == propertyValue.ToString())
+                            if (prop.GetValue(item).ToString() == (propertyValue ?? "").ToString())
                             {
                                 col.Add(item);
                             }
@@ -366,7 +366,7 @@ namespace ReflectXMLDB
 
             var db = Activator.CreateInstance(objectType);
             ((IDatabase)db).GUID = GetNextGUID<T>();
-            var xml = db.Serialize(true);
+            var xml = db.Serialize();
 
             lock(lockObject)
             {
@@ -497,7 +497,7 @@ namespace ReflectXMLDB
 
             lock (lockObject)
             {
-                db.Serialize(true).Save(path);
+                db.Serialize().Save(path);
             }
         }
         /// <summary>
