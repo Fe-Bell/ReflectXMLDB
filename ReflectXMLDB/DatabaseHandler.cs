@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace ReflectXMLDB
 {
@@ -34,6 +35,10 @@ namespace ReflectXMLDB
         /// Object used for cross-thread protection.
         /// </summary>
         private static readonly object lockObject = new object();
+        /// <summary>
+        /// Mutex to protect file access from multiple processes.
+        /// </summary>
+        protected static Mutex mutex = new Mutex(false, "ReflectXMLDBMutex");
 
         #endregion
 
@@ -257,10 +262,33 @@ namespace ReflectXMLDB
 
                 lock(lockObject)
                 {
-                    database = path.Deserialize<T>();
-                }
+                    try
+                    {
+                        try
+                        {
+                            mutex.WaitOne();
+                            database = path.Deserialize<T>();
+                        }
+                        catch
+                        {
+                            throw;
+                        }
+                        finally
+                        {
+                            mutex.ReleaseMutex();
+                        }
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
 
-                return database;
+                    }
+
+                    return database;
+                }
             }
             else
             {
@@ -370,7 +398,30 @@ namespace ReflectXMLDB
 
             lock(lockObject)
             {
-                xml.Save(path);
+                try
+                {
+                    try
+                    {
+                        mutex.WaitOne();
+                        xml.Save(path);
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
+                }
+                catch
+                {
+                    throw;
+                }   
+                finally
+                {
+                    
+                }
             }
         }
         /// <summary>
@@ -386,7 +437,30 @@ namespace ReflectXMLDB
             {
                 lock(lockObject)
                 {
-                    File.Delete(path);
+                    try
+                    {
+                        try
+                        {
+                            mutex.WaitOne();
+                            File.Delete(path);
+                        }
+                        catch
+                        {
+                            throw;
+                        }
+                        finally
+                        {
+                            mutex.ReleaseMutex();
+                        }
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                       
+                    }
                 }
             }
         }       
@@ -497,7 +571,32 @@ namespace ReflectXMLDB
 
             lock (lockObject)
             {
-                db.Serialize().Save(path);
+                var xml = db.Serialize();
+
+                try
+                {
+                    try
+                    {
+                        mutex.WaitOne();
+                        xml.Save(path);
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    
+                }
             }
         }
         /// <summary>
@@ -591,30 +690,53 @@ namespace ReflectXMLDB
 
             lock(lockObject)
             {
-                //Opens the zip file up to be read
-                using (ZipArchive archive = ZipFile.OpenRead(fileToImport))
+                try
                 {
-                    //Loops through each file in the zip file
-                    foreach (ZipArchiveEntry file in archive.Entries)
+                    try
                     {
-                        //Identifies the destination file name and path
-                        fileUnzipFullName = Path.Combine(exportPath, file.FullName);
-
-                        //Extracts the files to the output folder in a safer manner
-                        if (File.Exists(fileUnzipFullName))
+                        mutex.WaitOne();
+                        //Opens the zip file up to be read
+                        using (ZipArchive archive = ZipFile.OpenRead(fileToImport))
                         {
-                            File.Delete(fileUnzipFullName);
+                            //Loops through each file in the zip file
+                            foreach (ZipArchiveEntry file in archive.Entries)
+                            {
+                                //Identifies the destination file name and path
+                                fileUnzipFullName = Path.Combine(exportPath, file.FullName);
+
+                                //Extracts the files to the output folder in a safer manner
+                                if (File.Exists(fileUnzipFullName))
+                                {
+                                    File.Delete(fileUnzipFullName);
+                                }
+
+                                //Calculates what the new full path for the unzipped file should be
+                                fileUnzipFullPath = Path.GetDirectoryName(fileUnzipFullName);
+
+                                //Creates the directory (if it doesn't exist) for the new path
+                                Directory.CreateDirectory(fileUnzipFullPath);
+
+                                //Extracts the file to (potentially new) path
+                                file.ExtractToFile(fileUnzipFullName);
+                            }
                         }
-
-                        //Calculates what the new full path for the unzipped file should be
-                        fileUnzipFullPath = Path.GetDirectoryName(fileUnzipFullName);
-
-                        //Creates the directory (if it doesn't exist) for the new path
-                        Directory.CreateDirectory(fileUnzipFullPath);
-
-                        //Extracts the file to (potentially new) path
-                        file.ExtractToFile(fileUnzipFullName);
                     }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+
                 }
             }
 
@@ -632,19 +754,43 @@ namespace ReflectXMLDB
                 pathToSave += '\\';
             }
 
-            if(!Directory.Exists(pathToSave))
-            {
-                Directory.CreateDirectory(pathToSave);
-            }
-
-            string fullFilePath = Path.Combine(pathToSave, filename + fileExtension);
-
             lock(lockObject)
             {
-                ZipFile.CreateFromDirectory(CurrentWorkspace, fullFilePath);
-            }
+                try
+                {
+                    try
+                    {
+                        mutex.WaitOne();
 
-            OnDatabaseExported?.Invoke(this, new OnDatabaseExportedEventArgs(fullFilePath, DateTime.Now));
+                        if (!Directory.Exists(pathToSave))
+                        {
+                            Directory.CreateDirectory(pathToSave);
+                        }
+
+                        string fullFilePath = Path.Combine(pathToSave, filename + fileExtension);
+
+                        ZipFile.CreateFromDirectory(CurrentWorkspace, fullFilePath);
+
+                        OnDatabaseExported?.Invoke(this, new OnDatabaseExportedEventArgs(fullFilePath, DateTime.Now));
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+
+                }
+            }
         }
         /// <summary>
         /// Updates a selection of items in its respective database.
