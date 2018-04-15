@@ -11,13 +11,28 @@ using System.Reflection;
 
 namespace ReflectXMLDB
 {
+    /// <summary>
+    /// Provides resources for manipulating XML-based databases.
+    /// </summary>
     public class DatabaseHandler : DatabaseHandlerBase
     {
         #region Private fields
 
+        /// <summary>
+        /// Watches the database's current folder.
+        /// </summary>
         private FileSystemWatcher fileSystemWatcher = null;
+        /// <summary>
+        /// Stores the paths for each initialized XML.
+        /// </summary>
         private IEnumerable<string> paths = null;
+        /// <summary>
+        /// Stores the name of the last modifiled file in the database folder.
+        /// </summary>
         private string lastFileChanged = string.Empty;
+        /// <summary>
+        /// Object used for cross-thread protection.
+        /// </summary>
         private static readonly object lockObject = new object();
 
         #endregion
@@ -630,6 +645,29 @@ namespace ReflectXMLDB
             }
 
             OnDatabaseExported?.Invoke(this, new OnDatabaseExportedEventArgs(fullFilePath, DateTime.Now));
+        }
+        /// <summary>
+        /// Updates a selection of items in its respective database.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        public void Update<T>(ICollection<T> items) where T : ICollectableObject
+        {
+            if (items.IsNull())
+            {
+                throw new ArgumentNullException("The parameter items cannot be null.");
+            }
+
+            DatabaseItemInfo<T> dbInfo = GetDatabaseItemInfo<T>();
+
+            var db = GetType().GetMethod("GetDatabase", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(dbInfo.DatabaseType).Invoke(this, null);
+            var dbCollection = db.GetType().GetProperty(dbInfo.CollectionName).GetValue(db) as ICollection<T>;
+
+            List<T> newCollection = dbCollection.IsNull() ? new List<T>() : dbCollection.ToList();       
+            items.ForEach(item => newCollection.RemoveAll(dbItem => dbItem.GUID == item.GUID));
+            items.ForEach(item => newCollection.Add(item));
+
+            Save<T>(newCollection);
         }
 
         #endregion
