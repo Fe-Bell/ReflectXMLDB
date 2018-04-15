@@ -62,17 +62,15 @@ namespace ReflectXMLDB.Generic
         /// <param name="predicate"></param>
         public static void RemoveAll<T>(this ICollection<T> collection, Func<T, bool> predicate)
         {
-            List<T> list = collection as List<T>;
+            List<T> list = GetList(collection);
 
-            if (list != null)
+            if (!list.IsNull())
             {
                 list.RemoveAll(new Predicate<T>(predicate));
             }
             else
             {
-                List<T> itemsToDelete = collection
-                    .Where(predicate)
-                    .ToList();
+                List<T> itemsToDelete = collection.Where(predicate).ToList();
 
                 foreach (var item in itemsToDelete)
                 {
@@ -80,7 +78,18 @@ namespace ReflectXMLDB.Generic
                 }
             }
         }
-             
+
+        /// <summary>
+        /// Returns a list from an ICollection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        private static List<T> GetList<T>(ICollection<T> collection)
+        {
+            return collection as List<T>;
+        }
+
         /// <summary>
         /// Converts enumerable to ObservableCollection.
         /// </summary>
