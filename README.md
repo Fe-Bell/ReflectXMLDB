@@ -5,6 +5,14 @@ This is a project that allows C#/.NET developers to implement simple XML databas
 
 ReflectXMLDB is cross platform and can run in Windows, Linux and MacOS operating systems that support the .Net Core initiative.
 
+# Features
+- Cross everything. ReflectXMLDB is thread and multi-process protected. Also it can run on Linux, MacOS and Windows.
+- Work with friendly XML database format that can be read by any regular text editor.
+- Use simple methods to write/read data to the databases. Forget complex query actions and focus on your actual code.
+- It is completely open source!
+
+More to come!
+
 # Get started
 Download ReflectXMLDB from our [nuget](https://www.nuget.org/packages/ReflectXMLDB/) links.
 
@@ -81,7 +89,7 @@ And SampleDatabase is:
     }
 ```
 
-Have a nice coding!
+Happy coding!
 
 # License
 Licensed under [MIT License](https://github.com/Fe-Bell/ReflectXMLDB/blob/master/LICENSE).
