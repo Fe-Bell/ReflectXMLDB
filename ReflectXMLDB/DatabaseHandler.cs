@@ -38,7 +38,7 @@ namespace ReflectXMLDB
         /// <summary>
         /// Mutex to protect file access from multiple processes.
         /// </summary>
-        protected static Mutex mutex = new Mutex(false, "ReflectXMLDBMutex");
+        protected static Mutex mutex = null;
 
         #endregion
 
@@ -126,6 +126,27 @@ namespace ReflectXMLDB
         public OnDatabaseExportedEventHandler OnDatabaseExported = null;
 
         #endregion
+
+        /// <summary>
+        /// Creates a new instance of DatabaseHandler.
+        /// </summary>
+        public DatabaseHandler()
+        {
+            //Xamarin does not currently support mutexes for some mobile platforms.
+            //When a new Mutex instance is created by Xamarin.Forms, a NotSupportedException/NotImplementedException is thrown.
+            //The following code handles this exception. The mutex will be ignored because it is null.
+            try
+            {
+                mutex = new Mutex(false, "ReflectXMLDBMutex");
+            }            
+            catch (Exception ex)
+            {
+                if (ex is NotSupportedException || ex is NotImplementedException)
+                {
+                    Console.WriteLine("Cross-process disabled.");
+                }
+            }
+        }
 
         #region Private methods
 
@@ -219,17 +240,30 @@ namespace ReflectXMLDB
         /// <param name="path"></param>
         private void StartMonitoringDirectory(string path)
         {
-            fileSystemWatcher = new FileSystemWatcher
+            //Xamarin does not currently support a unified FileSystemWatcher for mobile platforms.
+            //When a new FileSystemWatcher instance is created by Xamarin.Forms, a NotSupportedException/NotImplementedException is thrown.
+            //The following code handles this exception. The FileSystemWatcher will be ignored because it is null.
+            try
             {
-                Path = path
-            };
-            fileSystemWatcher.Changed += FileSystemWatcher_Changed;
-            fileSystemWatcher.Created += FileSystemWatcher_Created;
-            fileSystemWatcher.Renamed += FileSystemWatcher_Renamed;
-            fileSystemWatcher.Deleted += FileSystemWatcher_Deleted;
+                fileSystemWatcher = new FileSystemWatcher
+                {
+                    Path = path
+                };
+                fileSystemWatcher.Changed += FileSystemWatcher_Changed;
+                fileSystemWatcher.Created += FileSystemWatcher_Created;
+                fileSystemWatcher.Renamed += FileSystemWatcher_Renamed;
+                fileSystemWatcher.Deleted += FileSystemWatcher_Deleted;
 
-            fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite;
-            fileSystemWatcher.EnableRaisingEvents = true;
+                fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite;
+                fileSystemWatcher.EnableRaisingEvents = true;
+            }
+            catch(Exception ex)
+            {
+                if(ex is NotSupportedException || ex is NotImplementedException)
+                {
+                    Console.WriteLine("FileWatcher disabled.");
+                }
+            }
         }
         /// <summary>
         /// Stops monitoring a folder. This disposes the Filewatcher and its events.
@@ -266,7 +300,11 @@ namespace ReflectXMLDB
                     {
                         try
                         {
-                            mutex.WaitOne();
+                            if(!mutex.IsNull())
+                            {
+                                mutex.WaitOne();
+                            }
+                            
                             database = path.Deserialize<T>();
                         }
                         catch
@@ -275,7 +313,10 @@ namespace ReflectXMLDB
                         }
                         finally
                         {
-                            mutex.ReleaseMutex();
+                            if(!mutex.IsNull())
+                            {
+                                mutex.ReleaseMutex();
+                            }                           
                         }
                     }
                     catch
@@ -402,7 +443,11 @@ namespace ReflectXMLDB
                 {
                     try
                     {
-                        mutex.WaitOne();
+                        if (!mutex.IsNull())
+                        {
+                            mutex.WaitOne();
+                        }
+
                         xml.Save(path);
                     }
                     catch
@@ -411,7 +456,10 @@ namespace ReflectXMLDB
                     }
                     finally
                     {
-                        mutex.ReleaseMutex();
+                        if (!mutex.IsNull())
+                        {
+                            mutex.ReleaseMutex();
+                        }
                     }
                 }
                 catch
@@ -441,7 +489,11 @@ namespace ReflectXMLDB
                     {
                         try
                         {
-                            mutex.WaitOne();
+                            if (!mutex.IsNull())
+                            {
+                                mutex.WaitOne();
+                            }
+
                             File.Delete(path);
                         }
                         catch
@@ -450,7 +502,10 @@ namespace ReflectXMLDB
                         }
                         finally
                         {
-                            mutex.ReleaseMutex();
+                            if (!mutex.IsNull())
+                            {
+                                mutex.ReleaseMutex();
+                            }
                         }
                     }
                     catch
@@ -577,8 +632,19 @@ namespace ReflectXMLDB
                 {
                     try
                     {
-                        mutex.WaitOne();
+                        if (!mutex.IsNull())
+                        {
+                            mutex.WaitOne();
+                        }
+
                         xml.Save(path);
+
+                        //Will fire the database changed event when the FileSystemWatcher is unavailable.
+                        //This should happen only when using Xamarin.Forms as there is no native support for that class.
+                        if(fileSystemWatcher.IsNull())
+                        {
+                            OnDatabaseChanged?.Invoke(this, new OnDatabaseChangedEventArgs(dbInfo.DatabaseType.Name, DateTime.Now));
+                        }
                     }
                     catch
                     {
@@ -586,7 +652,10 @@ namespace ReflectXMLDB
                     }
                     finally
                     {
-                        mutex.ReleaseMutex();
+                        if (!mutex.IsNull())
+                        {
+                            mutex.ReleaseMutex();
+                        }
                     }
                 }
                 catch
@@ -694,7 +763,11 @@ namespace ReflectXMLDB
                 {
                     try
                     {
-                        mutex.WaitOne();
+                        if (!mutex.IsNull())
+                        {
+                            mutex.WaitOne();
+                        }
+
                         //Opens the zip file up to be read
                         using (ZipArchive archive = ZipFile.OpenRead(fileToImport))
                         {
@@ -727,7 +800,10 @@ namespace ReflectXMLDB
                     }
                     finally
                     {
-                        mutex.ReleaseMutex();
+                        if (!mutex.IsNull())
+                        {
+                            mutex.ReleaseMutex();
+                        }
                     }
                 }
                 catch
@@ -760,7 +836,10 @@ namespace ReflectXMLDB
                 {
                     try
                     {
-                        mutex.WaitOne();
+                        if (!mutex.IsNull())
+                        {
+                            mutex.WaitOne();
+                        }
 
                         if (!Directory.Exists(pathToSave))
                         {
@@ -779,7 +858,10 @@ namespace ReflectXMLDB
                     }
                     finally
                     {
-                        mutex.ReleaseMutex();
+                        if (!mutex.IsNull())
+                        {
+                            mutex.ReleaseMutex();
+                        }
                     }
                 }
                 catch
