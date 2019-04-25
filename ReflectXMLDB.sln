@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 16
+VisualStudioVersion = 16.0.1
+MinimumVisualStudioVersion = 15.0.27130.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReflectXMLDB", "ReflectXMLDB\ReflectXMLDB.csproj", "{2D50DB04-8497-48E0-9A15-EE298B03572A}"
 EndProject
 Global
