@@ -1,3 +1,5 @@
+![Image description](https://github.com/Fe-Bell/ReflectXMLDB/blob/master/rxdblogo.png)
+
 # ReflectXMLDB
 Simple database handler based on XML serialization and reflection.
 
