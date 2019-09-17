@@ -1,7 +1,7 @@
 ![Image description](https://github.com/Fe-Bell/ReflectXMLDB/blob/master/rxdblogo.png)
 
 # ReflectXMLDB
-Simple database framework based on XML serialization and reflection.
+Database framework based on object serialization to XML.
 
 This is a project that allows C#/.NET developers to implement simple XML database functionality in their applications. The project is written for [.NET Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) 2.0, which is compatible with .NET Core 2.0+ and .NET Framework 4.6.1+.
 
