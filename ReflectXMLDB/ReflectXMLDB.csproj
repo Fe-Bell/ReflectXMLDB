@@ -1,23 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Felipe Bellini</Authors>
     <Company></Company>
-    <Description>Simple database handler based on XML serialization and reflection.
+    <Description>Database framework based on object serialization to XML.
 
-This is a simple project that aims for C#/.NET developers to achieve database functionality in their applications. The project is written for .NET Standard 2.0, which is compatible with .NET Core 2.0+ and .NET Framework 4.6.1+.</Description>
+This is a project that allows C#/.NET developers to implement simple XML database functionality in their applications. The project is written for .NET Standard 2.0, which is compatible with .NET Core 2.0+ and .NET Framework 4.6.1+.
+
+ReflectXMLDB is cross platform and can run in Windows, Linux and MacOS operating systems that support the .Net Core initiative.</Description>
     <Copyright>Copyright© ReflectXMLDB 2018</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>ReflectXMLDB</AssemblyName>
     <RootNamespace>ReflectXMLDB</RootNamespace>
     <Product>ReflectXMLDB</Product>
     <PackageId>ReflectXMLDB</PackageId>
-    <Version>0.0.3</Version>
+    <Version>1.0.0</Version>
     <PackageLicenseUrl>https://github.com/Fe-Bell/ReflectXMLDB/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Fe-Bell/ReflectXMLDB</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://www.nuget.org/packages/ReflectXMLDB/</RepositoryUrl>
+    <PackageIconUrl>https://github.com/Fe-Bell/ReflectXMLDB/blob/master/rxdblogo.png</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
