@@ -16,11 +16,13 @@ ReflectXMLDB is cross platform and can run in Windows, Linux and MacOS operating
     <Product>ReflectXMLDB</Product>
     <PackageId>ReflectXMLDB</PackageId>
     <Version>1.0.0</Version>
-    <PackageLicenseUrl>https://github.com/Fe-Bell/ReflectXMLDB/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Fe-Bell/ReflectXMLDB</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://www.nuget.org/packages/ReflectXMLDB/</RepositoryUrl>
-    <PackageIconUrl>https://github.com/Fe-Bell/ReflectXMLDB/blob/master/rxdblogo.png</PackageIconUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>ReflectXMLDBIcon.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -30,5 +32,16 @@ ReflectXMLDB is cross platform and can run in Windows, Linux and MacOS operating
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\bin\Release\netstandard2.0\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\Art\ReflectXMLDBIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
