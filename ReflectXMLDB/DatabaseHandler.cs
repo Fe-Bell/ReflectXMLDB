@@ -819,9 +819,11 @@ namespace ReflectXMLDB
             OnDatabaseImported?.Invoke(this, new OnDatabaseImportedEventArgs(fileUnzipFullName, DateTime.Now));
         }
         /// <summary>
-        /// Exports a group of database files to a single zipped file.
+        ///  Exports a group of database files to a single zipped file.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="pathToSave">A folder where the database file will be created.</param>
+        /// <param name="filename">A name for the database file.</param>
+        /// <param name="fileExtension">An extension for the file.</param>
         public void ExportDatabase(string pathToSave, string filename, string fileExtension = ".db")
         {
             //Checks if the path to save ends with a slash and if not, adds it.
@@ -841,19 +843,44 @@ namespace ReflectXMLDB
                             mutex.WaitOne();
                         }
 
+                        //Make sure the specified directory exists, else creates it
                         if (!Directory.Exists(pathToSave))
                         {
                             Directory.CreateDirectory(pathToSave);
                         }
 
+                        //1. Create temp folder with the database files
+                        string tempFolder = Path.Combine(pathToSave, Guid.NewGuid().ToString().ToUpper());
+                        if(!Directory.Exists(Path.Combine(tempFolder)))
+                        {
+                            Directory.CreateDirectory(tempFolder);
+                        }
+
+                        //2. Copy database files to the temp folder
+                        foreach(var database in CurrentDatabases)
+                        {
+                            //Will copy all files matching a database class name
+                            var filesWithDBName = Directory.GetFiles(CurrentWorkspace, database.Name + ".*", SearchOption.TopDirectoryOnly);
+                            if(filesWithDBName.Any())
+                            {
+                                //Copy files to temp folder
+                                filesWithDBName.ForEach(f => File.Copy(f, Path.Combine(tempFolder, System.IO.Path.GetFileName(f)), true));
+                            }
+                        }
+
+                        //3. Archive this temp folder to the database file
                         string fullFilePath = Path.Combine(pathToSave, filename + fileExtension);
+                        ZipFile.CreateFromDirectory(tempFolder, fullFilePath);
 
-                        ZipFile.CreateFromDirectory(CurrentWorkspace, fullFilePath);
+                        //4. Delete temp folder
+                        Directory.Delete(tempFolder, true);
 
+                        //Fire events.
                         OnDatabaseExported?.Invoke(this, new OnDatabaseExportedEventArgs(fullFilePath, DateTime.Now));
                     }
                     catch
                     {
+                        //The exception is caught after the mutex is release.
                         throw;
                     }
                     finally
@@ -866,6 +893,7 @@ namespace ReflectXMLDB
                 }
                 catch
                 {
+                    //Exception is caught here and sent to the caller.
                     throw;
                 }
                 finally
