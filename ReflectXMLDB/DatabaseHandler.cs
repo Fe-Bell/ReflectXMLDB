@@ -870,7 +870,13 @@ namespace ReflectXMLDB
 
                         //3. Archive this temp folder to the database file
                         string fullFilePath = Path.Combine(pathToSave, filename + fileExtension);
-                        ZipFile.CreateFromDirectory(tempFolder, fullFilePath);
+                        if(File.Exists(fullFilePath))
+                        {
+                            //If the file already exists, delete and recreate
+                            File.Delete(fullFilePath);
+                        }
+
+                        ZipFile.CreateFromDirectory(tempFolder, fullFilePath, CompressionLevel.Optimal, false);
 
                         //4. Delete temp folder
                         Directory.Delete(tempFolder, true);
