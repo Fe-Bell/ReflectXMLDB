@@ -1,4 +1,6 @@
-![Image description](https://github.com/Fe-Bell/ReflectXMLDB/blob/master/rxdblogo.png)
+<p align="center">
+  <img src="rxdblogo.png">
+</p>
 
 # ReflectXMLDB
 Database framework based on object serialization to XML.
