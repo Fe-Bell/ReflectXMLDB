@@ -401,16 +401,29 @@ namespace ReflectXMLDB
         {
             StopMonitoringDirectory();
 
+            //Checks if the current workspace is still exists
             if (Directory.Exists(CurrentWorkspace))
             {
-                Directory.Delete(CurrentWorkspace, true);
+                //Fixes GitHub issue #4
+                foreach (var database in CurrentDatabases)
+                {
+                    //Will copy all files matching a database class name
+                    var filesWithDBName = Directory.GetFiles(CurrentWorkspace, database.Name + ".*", SearchOption.TopDirectoryOnly);
+                    if (filesWithDBName.Any())
+                    {
+                        //Deletes XML files associated with the current database
+                        filesWithDBName.ForEach(f => File.Delete(f));
+                    }
+                }
             }
 
+            //Clears internal data
             CurrentWorkspace = null;
             CurrentDatabases = null;
             paths = null;
             lastFileChanged = null;
 
+            //Disengage events
             if (!OnDatabaseChanged.IsNull())
             {
                 OnDatabaseChanged = null;
