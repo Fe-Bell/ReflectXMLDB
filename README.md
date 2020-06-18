@@ -2,6 +2,8 @@
   <img src="rxdblogo.png">
 </p>
 
+![.NET Core](https://github.com/Fe-Bell/ReflectXMLDB/workflows/.NET%20Core/badge.svg)
+
 # ReflectXMLDB
 Database framework based on object serialization to XML.
 
