@@ -15,7 +15,7 @@ ReflectXMLDB is cross platform and can run in Windows, Linux and MacOS operating
     <RootNamespace>ReflectXMLDB</RootNamespace>
     <Product>ReflectXMLDB</Product>
     <PackageId>ReflectXMLDB</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.0.1</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Fe-Bell/ReflectXMLDB</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -25,6 +25,7 @@ ReflectXMLDB is cross platform and can run in Windows, Linux and MacOS operating
     <PackageIcon>ReflectXMLDBIcon.png</PackageIcon>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ReflectXMLDB.snk</AssemblyOriginatorKeyFile>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
