@@ -407,7 +407,7 @@ namespace ReflectXMLDB
                 //Fixes GitHub issue #4
                 foreach (var database in CurrentDatabases)
                 {
-                    //Will copy all files matching a database class name
+                    //Will delete all files matching a database class name
                     var filesWithDBName = Directory.GetFiles(CurrentWorkspace, database.Name + ".*", SearchOption.TopDirectoryOnly);
                     if (filesWithDBName.Any())
                     {
