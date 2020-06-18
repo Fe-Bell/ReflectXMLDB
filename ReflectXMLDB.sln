@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 16
+# Visual Studio Version 16
 VisualStudioVersion = 16.0.1
 MinimumVisualStudioVersion = 15.0.27130.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReflectXMLDB", "ReflectXMLDB\ReflectXMLDB.csproj", "{2D50DB04-8497-48E0-9A15-EE298B03572A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReflectXMLDB.Test", "ReflectXMLDB.Test\ReflectXMLDB.Test.csproj", "{862EF064-C4A0-4F12-8FAC-AE8D824BB091}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2D50DB04-8497-48E0-9A15-EE298B03572A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D50DB04-8497-48E0-9A15-EE298B03572A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D50DB04-8497-48E0-9A15-EE298B03572A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{862EF064-C4A0-4F12-8FAC-AE8D824BB091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{862EF064-C4A0-4F12-8FAC-AE8D824BB091}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{862EF064-C4A0-4F12-8FAC-AE8D824BB091}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{862EF064-C4A0-4F12-8FAC-AE8D824BB091}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
