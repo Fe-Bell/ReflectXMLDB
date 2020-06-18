@@ -63,7 +63,7 @@ namespace ReflectXMLDB.Test
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }
